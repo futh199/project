@@ -1,0 +1,1 @@
+const std::string& n, short h, short d, short e, short l,typ name_typ=enemy

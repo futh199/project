@@ -1,0 +1,32 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe сборка активного файла",
+            "command": "E:\\w64devkit\\bin\\g++.exe",
+            "args": [
+                
+                    "-g",
+                    "Game.cpp",
+                    "Player.cpp",
+                    "Enemy.cpp",
+                    "Character.cpp",
+                    "Weapon.cpp",
+                    "-o",
+                    "Game.exe"
+                            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Задача создана отладчиком."
+        }
+    ],
+    "version": "2.0.0"
+}
