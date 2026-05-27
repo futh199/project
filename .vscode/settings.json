@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "b:\\Stupid\\.vscode\\rpg",
+            "binaryPath": "b:\\Stupid\\.vscode\\rpg\\game",
+            "binaryArgs": []
+        }
+    ]
+}
