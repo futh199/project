@@ -50,8 +50,12 @@ void Combat::displayStatus(const Player& player, const Enemy& enemy){
 int Combat::getPlayerAction(){
     std::cout << "Attack - |1|" << std::endl << "Use_item - |2|" << std::endl << "Defend - |3|" << std::endl;
     short choice = 0;
-    std::cin >> choice;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while(!(std::cin >> choice)){
+        std::cin.clear();
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Enter a number! Try again: ";
+    }
     return choice;
 }
 void Combat::playerTurn(Player& player, Enemy& enemy){

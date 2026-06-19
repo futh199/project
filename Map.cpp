@@ -1,27 +1,86 @@
 #include <iostream>
+#include <functional>
 #include <string>
 #include "Location.h"
 #include "Map.h"
 #include "ItemFactory.h"
-Map::Map() : x(0), y(4) // ручное создание карты
+bool Map::isFree(int row, int col){
+    if(grid[row][col] == nullptr)
+        return true;
+    else
+        return false;
+}
+std::pair<int, int> Map::getRandomFreeCell() {
+    int row, col;
+    do {
+        row = rand() % 5;
+        col = rand() % 9;
+    } while (!isFree(row, col));
+    return {row, col};
+}
+
+
+Map::Map() // ручное создание карты
 {
+    std::vector<Enemy* (*)()> enemyFactories = {
+    ItemFactory::Goblin,
+    ItemFactory::Wolf,
+    ItemFactory::Rat,
+    ItemFactory::Orc,
+    ItemFactory::Skeleton,
+    ItemFactory::Ghost
+    };
+    std::vector<std::function<Item*()>> itemFactories = {
+    ItemFactory::Dagger,
+    ItemFactory::Axe,
+    ItemFactory::Rapier,
+    ItemFactory::PlasmaSword,
+    ItemFactory::Slingshot,
+    ItemFactory::LightingBow,
+    ItemFactory::Harpoon,
+    ItemFactory::Apple,
+    ItemFactory::Fish,
+    ItemFactory::Meat,
+    ItemFactory::Squirrel,
+    ItemFactory::Borsch,
+    ItemFactory::God_eat,
+    ItemFactory::Humanity,
+    ItemFactory::Water,
+    ItemFactory::GoldenApple,
+    ItemFactory::Potion_God,
+    ItemFactory::Potion_Power,
+    ItemFactory::Potion_Reability,
+    ItemFactory::Potion_Stamina,
+    ItemFactory::PlasmaSword,
+    ItemFactory::Potion_Heal,
+    ItemFactory::Bread,
+    ItemFactory::IronSword
+};
+    grid[x][y] = new Location("Старт");
     for(int i = 0;i<width;i++){
         for(int j = 0;j<height;j++){
             grid[i][j] = nullptr; // для заполнения всех полей пустыми значениями
         }
     }
-    grid[0][0] = new Location("Dark forest", nullptr, ItemFactory::GoldenApple());
-    grid[0][1] = new Location("Forest", ItemFactory::Goblin());
-    grid[0][2] = new Location("Razor", nullptr, ItemFactory::PlasmaSword());
-    grid[0][4] = new Location("Spawn");  // стартовая локация
-
-    grid[1][1] = new Location("Eby alibabu", ItemFactory::Goblin(), ItemFactory::Potion_Heal());
-    grid[1][2] = new Location("NightFall", nullptr, ItemFactory::Bread());
-    grid[1][3] = new Location("Io", ItemFactory::Goblin());
-    grid[1][4] = new Location("Lock", ItemFactory::Goblin());
-    grid[1][0] = new Location("Gg");
-    grid[2][0] = new Location("Win", ItemFactory::Goblin());
-
+    
+    int enemyCount = 5 + rand() % 8; // от 5 до 12
+    for (int i = 0; i < enemyCount; i++) {
+        auto cell = getRandomFreeCell();
+        int idx = rand() % enemyFactories.size();
+        grid[cell.first][cell.second] = new Location("Опасная зона", enemyFactories[idx]());
+    }
+    int itemCount = 4 + rand() % 8; // от 4 до 11
+    for (int i = 0; i < itemCount; i++) {
+        auto cell = getRandomFreeCell();
+        int idx = rand() % itemFactories.size();
+        grid[cell.first][cell.second] = new Location("Сундук", nullptr, itemFactories[idx]());
+    } 
+    auto cell = getRandomFreeCell();
+    grid[cell.first][cell.second] = new Location("Выход", ItemFactory::Dragon(), nullptr, true);
+    auto c = getRandomFreeCell();
+    x = c.first;
+    y = c.second;
+    
 }
 
 Map::~Map()
@@ -33,8 +92,7 @@ Map::~Map()
 
 bool Map::win() const
 {
-    if(grid[2][0]->clear()) return true; // условие для победы
-    return false;
+    return grid[x][y] != nullptr && grid[x][y]->isExit(); // условие для победы
 }
 
 void Map::print()
@@ -46,6 +104,8 @@ void Map::print()
                 std::cout << " \033[32m@\033[0m "; // значок игрока
             else if(grid[i][j] == nullptr)
                 std::cout << " \033[90m.\033[0m "; // значок пустоты
+            else if(grid[i][j]->isExit())
+                std::cout << " \033[35m>\033[0m "; // значок выхода
             else if(grid[i][j]->get_item() && grid[i][j]->get_enemy() == nullptr)
                 std::cout << " \033[33mI\033[0m "; // значок сундука
             else if(grid[i][j]->get_enemy() && grid[i][j]->get_item() == nullptr)
@@ -60,7 +120,7 @@ void Map::print()
     }
     std::cout << "==============" << std::endl;
     std::cout << "\033[32m@\033[0m-Player" << std::endl << "\033[31mE\033[0m-Enemy" << std::endl << "\033[33mI\033[0m-Item" << std::endl <<
-    "\033[91mTr\033[0m-Enemy and Item" << std::endl << "\033[90m.\033[0m - Void" <<std::endl;
+    "\033[91mTr\033[0m-Enemy and Item" << std::endl << "\033[90m.\033[0m - Void" <<std::endl <<  "\033[35m>\033[0m-Exit" << std::endl;
     std::cout << "==============" << std::endl;
 }
 
@@ -80,11 +140,7 @@ void Map::move(char direction)
         std::cout << "You can`t go that way" << std::endl;
         return;
     }
-    if(grid[newx][newy]==nullptr) // проверка на пустую клетку
-    {
-        std::cout << "Nothing there" << std::endl;
-        return;
-    }
+    
     // если все нормально, то присваиваем координаты
     x = newx;
     y = newy;

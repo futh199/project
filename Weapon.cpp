@@ -8,7 +8,7 @@ Weapon::Weapon(const std::string& n,short damage, short stamina, short defence,t
 }
 void Weapon::print()
 {
-    std::cout << name << std::endl <<"Damage: " << damage << std::endl << "Defence: " << defence << std::endl
+    std::cout << "\033[31m" << name << "\033[0m" << std::endl <<"Damage: " << damage << std::endl << "Defence: " << defence << std::endl
     << "Stamina: " << stamina << std::endl << "Type: " << get_type_string() << std::endl;
 }
 void Weapon::use(Player& player)

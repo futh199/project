@@ -1,11 +1,11 @@
 Kolya
-70
-15
-2
-90
-1 2
-2
+1001
+50
+3
+35
+3 4
+3
 3
 Meat
 Meat
-Bread
+Water

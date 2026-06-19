@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <windows.h>
+#include <cstdlib>
+#include <ctime>
 #include "Character.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -17,7 +20,10 @@
 int totalKills = 0;
 void save_game(Player& player, const Map& map, int kills){
     std::ofstream file("save.txt");
-    if(!file.is_open()) return;
+    if(!file.is_open()){
+         std::cerr << "Failed to open the file for saving!" << std::endl;
+         return;
+    }
     // Данные игрока
     file << player.get_name() << "\n";
     file << player.get_health() << "\n";
@@ -181,7 +187,10 @@ void test_combat(){
     std::cout << "Max_Health: " << hero.get_max_hp() << " |Max_Stamina: " << hero.get_max_stamina() << " |Damage: " << hero.get_damage() << std::endl;
 };
 void test_map(){
-    Player hero("Kolya", 100, 10, 1);
+    SetConsoleOutputCP(CP_UTF8);
+    
+    Player hero("Kolya", 1000, 40, 1); //make game
+                                      //make clean
     Map world;
     hero.get_inventory().add(ItemFactory::Meat());
     hero.get_inventory() += (ItemFactory::Meat());
@@ -203,7 +212,9 @@ void test_map(){
         else{
             world.move(input);
             Location* loc = world.get_current_locale();
-            loc->enter(hero);
+            if (loc != nullptr) {
+                    loc->enter(hero);
+            }
         }
     }
     if(!hero.isLive()){
@@ -219,6 +230,13 @@ void test_map(){
     
 };
 int main(){
+    // Включение поддержки ANSI для Windows 10+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD mode = 0;
+    GetConsoleMode(hConsole, &mode);
+    SetConsoleMode(hConsole, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    srand(time(nullptr));
+    
     /*Player pl("God",100,1,10);
     
      Добавляем предметы через фабрику

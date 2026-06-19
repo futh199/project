@@ -10,7 +10,7 @@ Food::Food(const std::string n, short h,short hun) : Item(n), health(h), hunger(
 
 void Food::print()
 {
-    std::cout << name << ": Health " << health << ", hunger " << hunger << std::endl;
+    std::cout << "\033[32m" << name << "\033[0m" << ": Health " << health << ", hunger " << hunger << std::endl;
 }
 
 void Food::use(Player& player)

@@ -5,9 +5,9 @@
 class Map
 {
 private:
-    static const int width = 3; // высота карты
+    static const int width = 5; // высота карты
 
-    static const int height = 5; // длина карты
+    static const int height = 9; // длина карты
 
     Location* grid[width][height]; // координаты локации
 
@@ -16,12 +16,13 @@ private:
     bool complete{false}; // флаг на конец игры
     
 public:
+    void generateLocations();
     Map(); // конструктор
 
     ~Map(); // деструктор
-
+    std::pair<int, int> getRandomFreeCell();
     void move(char direction); // передвижение по карте
-
+    bool isFree(int row, int col);
     void print(); // вывод карты
     int getX() const {return x;}
     int getY() const {return y;}

@@ -10,10 +10,14 @@ private:
     Enemy* enemy{nullptr};
     Item* item{nullptr};
     bool isCleared{false};
+    bool Exit{false};
+
 public:
-    Location(const std::string& name, Enemy* enemy = nullptr, Item* item = nullptr); // конструктор преобразования
+    Location(const std::string& name, Enemy* enemy = nullptr, Item* item = nullptr,bool Exit = false); // конструктор преобразования
 
     void enter(Player& player); // запуск событий (бой,сундук)
+
+    bool isExit() const { return Exit; }
 
     void set_enemy(Enemy* e); // установка врага
 

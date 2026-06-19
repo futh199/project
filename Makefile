@@ -5,7 +5,7 @@ SRCS = Game.cpp Character.cpp Player.cpp Enemy.cpp Weapon.cpp Potion.cpp Food.cp
 OBJS = $(SRCS:.cpp=.o)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ 
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -13,7 +13,7 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-run: $(TARGET)
+run: $(TARGET) 
 	./$(TARGET)
 
 .PHONY: clean run

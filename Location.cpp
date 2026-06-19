@@ -3,7 +3,7 @@
 #include "Item.h"
 #include "Combat.h"
 #include "globals.h"
-Location::Location(const std::string& name,Enemy* enemy,Item* item) : name(name), enemy(enemy), item(item){}
+Location::Location(const std::string& name,Enemy* enemy,Item* item,bool Exit) : name(name), enemy(enemy), item(item), Exit(Exit){}
 
 void Location::set_enemy(Enemy* e)
 {

@@ -22,5 +22,5 @@ void Potion::use(Player& player){
     player.set_weapon_damage(damage);
 }
 void Potion::print(){
-    std::cout << name << ": Heal " << health << ", Hunger " << hunger << ", Stamina " << stamina << ", Damage " << damage << std::endl;
+    std::cout << "\033[33m" << name << "\033[0m" << ": Heal " << health << ", Hunger " << hunger << ", Stamina " << stamina << ", Damage " << damage << std::endl;
 }
