@@ -1,15 +1,16 @@
 #include<string>
 #include<iostream>
+#include<memory>
 #include "Character.h"
 #include "Enemy.h"
 
-Enemy::Enemy(const std::string& n, short h, short d, short l, short e,Weapon* w) : Character(n,h,d,l,e,w) {
+Enemy::Enemy(const std::string& n, short h, short d, short l, short e,std::unique_ptr<Weapon> w) : Character(n,h,d,l,e,std::move(w)) {
         std::cout << "Create Enemy: " << name << std::endl;
         max_hp = h;
         if(equipped)
         {   
-            set_damage(w->get_damage());
-            set_defence(w->get_defence());
+            set_damage(equipped->get_damage());
+            set_defence(equipped->get_defence());
         }
 }
 Enemy::~Enemy(){

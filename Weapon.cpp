@@ -11,10 +11,7 @@ void Weapon::print()
     std::cout << "\033[31m" << name << "\033[0m" << std::endl <<"Damage: " << damage << std::endl << "Defence: " << defence << std::endl
     << "Stamina: " << stamina << std::endl << "Type: " << get_type_string() << std::endl;
 }
-void Weapon::use(Player& player)
-{
-    player.set_weapon(this);
-}
+
 std::string Weapon::get_type_string() const 
 {
     switch (gun) {

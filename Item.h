@@ -9,6 +9,10 @@ protected:
 public:
     Item(const std::string& name) : name(name){} // конструктор преобразования
     virtual ~Item(){} // деструктор
+    Item(const Item&) = delete;
+    Item& operator=(const Item&) = delete;
+    Item(Item&&) = default;
+    Item& operator=(Item&&) = default;
     virtual void print() = 0; // чисто-виртуальный метод вывода инф-ции предмета
     virtual void use(Player& player) = 0; // чисто-виртуальный метод использования предмета
     virtual std::string get_name(){return name;} // получение имени

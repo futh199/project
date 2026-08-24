@@ -102,16 +102,17 @@ void Combat::playerTurn(Player& player, Enemy& enemy){
 void Combat::enemyTurn(Player& player, Enemy& enemy){
     if(!player.isLive()) return;
     short damage = enemy.get_damage();
+    short block = player.get_defence();
     if(player.isBlocking())
-        damage -= player.get_defence();
+        damage -= block;
     else
-        damage -= player.get_defence()/2;
+        damage -= block/2;
     if(damage<0) damage = 0;
     player.gift_damage(damage);
     if(player.isBlocking())
-        std::cout << enemy.get_name() << " Attacks for " << damage << "| Defence: " << player.get_defence() << std::endl;
+        std::cout << enemy.get_name() << " Attacks for " << damage << "| Defence: " << block << std::endl;
     else
-        std::cout << enemy.get_name() << " Attacks for " << damage << "| Defence: " << player.get_defence()/2 << std::endl;
+        std::cout << enemy.get_name() << " Attacks for " << damage << "| Defence: " << block/2 << std::endl;
 }
 bool Combat::turn(Player& player,Enemy& enemy){
     playerTurn(player,enemy);

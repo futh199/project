@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++17 -Wall
 TARGET = game
 SRCS = Game.cpp Character.cpp Player.cpp Enemy.cpp Weapon.cpp Potion.cpp Food.cpp Inventory.cpp Item.cpp ItemFactory.cpp Combat.cpp Map.cpp Location.cpp
 OBJS = $(SRCS:.cpp=.o)

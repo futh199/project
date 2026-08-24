@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
+#include <memory>
 #include<iostream>
 #include "Weapon.h"
-enum typ {enemy = 0, fri = 1, player = 2};
 class Character{
 
 protected:
@@ -13,14 +13,14 @@ protected:
     short lvl{1};
     short exp{0};
     short def{0}; // защита
-    Weapon* equipped{nullptr}; // оружие
-
-private:
-    typ name_typ; // тип персонажа
-protected:
-    Character(const std::string& n, short h, short d, short l,short e,Weapon* w,typ name_typ=enemy); // конструктор преобразования
+    std::unique_ptr<Weapon> equipped; // оружие
+    Character(const std::string& n, short h, short d, short l,short e,std::unique_ptr<Weapon> w); // конструктор преобразования
 public:
     virtual ~Character(); // деструктор
+    Character(const Character&) = delete;
+    Character(Character&&) = default;
+    Character& operator=(const Character&) = delete;
+    Character& operator=(Character&&) = default;
     bool isLive() const {return live;} // получение информации о жизни
     short get_health() const{return health;} // получение хп
     short get_damage() const{return damage;} // получение урона

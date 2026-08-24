@@ -18,8 +18,7 @@ public:
 
     virtual void print() override; // вывод хар-ки оружия
 
-    virtual void use(Player& player); // экипировка оружия
-
+    virtual void use(Player& player) {}
     std::string get_type_string() const; // вывод типа оружия
 
     short get_damage(){return damage;} // получение урона

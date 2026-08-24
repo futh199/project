@@ -7,13 +7,14 @@
 #include "ItemFactory.h"
 class Item;
 
-Player::Player(const std::string& n, short h, short d, short l) : Character(n,h,d,l,0,ItemFactory::IronSword(),player){
+Player::Player(const std::string& n, short h, short d, short l) : Character(n,h,d,l,0,ItemFactory::IronSword()){
     std::cout << "Hero: " << name << std::endl;
     set_defence(equipped->get_defence());
     set_weapon_damage(equipped->get_damage());
 }
 Player::~Player () {
     std::cout << "Game Over" << std::endl;
+    
 }
 
 short Player::get_max_hp() const{
@@ -46,15 +47,19 @@ std::string Player::get_weapon() const{
 void Player::set_defence(short d){
     def +=d;
 }
-void Player::set_weapon(Weapon* weapon){
-    if (equipped)
-        {set_weapon_damage(-equipped->get_damage());
-        set_defence(-equipped->get_defence());
-        inventar.add(equipped);}  // снимаем старый бонус
+std::unique_ptr<Weapon> Player::set_weapon(std::unique_ptr<Weapon> new_weapon){
+    std::unique_ptr<Weapon> old_sword = std::move(equipped);
+    if(old_sword){
+        set_weapon_damage(-old_sword->get_damage());
+        set_defence(-old_sword->get_defence());
+    }
     
-    equipped = weapon;
-    set_weapon_damage(weapon->get_damage());
-    set_defence(weapon->get_defence());        // добавляем новый бонус
+    equipped = std::move(new_weapon);
+    if(equipped){
+        set_weapon_damage(equipped->get_damage());
+        set_defence(equipped->get_defence()); // снимаем старый бонус
+    };
+    return old_sword;       // добавляем новый бонус
 }
 Inventory& Player::get_inventory() {return inventar;}
 void Player::lvl_up(){

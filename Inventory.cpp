@@ -1,49 +1,45 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<memory>
 #include "Item.h"
 #include "Inventory.h"
 #include "Player.h"
-Inventory::~Inventory()
+Inventory& Inventory::operator+=(std::unique_ptr<Item> right)
 {
-        for (auto* item : items) {
-            delete item;  // освобождаем память
-            }
-}
-Inventory& Inventory::operator+=(Item* right)
-{
-    if(right != nullptr)
-        add(right); // добавляем предмет
+    items.push_back(std::move(right));
     return *this;
 }
 void Inventory::use_item(size_t index, Player& player)
 {
     if (index >= items.size()) return; // проверяем корректность индекса
 
-    Item* item = items[index];
+    std::unique_ptr<Item> t = std::move(items[index]); // забираем предмет
+    items.erase(items.begin() + index);
 
     // Проверяем, является ли предмет оружием
-    if (dynamic_cast<Weapon*>(item) != nullptr) {
-        items.erase(items.begin() + index);// Оружие: экипируем, НЕ удаляем
-        item->use(player);
+    Weapon* weapon = dynamic_cast<Weapon*> (t.get());
+    if(weapon) {
+        // Оружие: экипируем, НЕ удаляем
+        auto old = player.set_weapon(std::unique_ptr<Weapon>(static_cast<Weapon*>(t.release())));
+        if(old){
+            add(std::move(old));
+        }
     } 
     else 
-    {
+    { 
         // Еда или зелье: используем и удаляем
-        item->use(player);
-        delete item;
-        items.erase(items.begin() + index);
+        t->use(player);
     }
 }
-void Inventory::add(Item* t)
+void Inventory::add(std::unique_ptr<Item> t)
 {
-    items.push_back(t); // добавление в конец инвентаря предмета
+    items.push_back(std::move(t)); // добавление в конец инвентаря предмета
 }
 void Inventory::remove(size_t index)
 {
     if(index <items.size()) // проверка на корректность индекса
     {
-        delete items[index]; 
         items.erase(items.begin()+index);
     }
 }
@@ -53,6 +49,7 @@ size_t Inventory::size() const
 }
 std::string Inventory::get_name(size_t index)
 {
+    if (index >= items.size()) return "";
     return items[index]->get_name();
 }
 void Inventory::print()  

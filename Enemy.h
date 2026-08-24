@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include <memory>
 #include<iostream>
 #include "Character.h"
 class Enemy : public Character{
@@ -7,7 +8,7 @@ private:
     short stamina{100}; 
     short max_hp{0};
 public:
-    Enemy(const std::string& n, short h, short d, short l,short e,Weapon* w=nullptr); // конструктор преобразования
+    Enemy(const std::string& n, short h, short d, short l,short e,std::unique_ptr<Weapon> w); // конструктор преобразования
     virtual ~Enemy(); // деструктор
     short get_max_hp() const{return max_hp;}
     void gift_damage(short damage); // получение урона

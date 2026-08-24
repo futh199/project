@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <functional>
 #include <string>
 #include "Location.h"
@@ -22,7 +23,7 @@ std::pair<int, int> Map::getRandomFreeCell() {
 
 Map::Map() // ручное создание карты
 {
-    std::vector<Enemy* (*)()> enemyFactories = {
+    std::vector<std::function<std::unique_ptr<Enemy>()>> enemyFactories = {
     ItemFactory::Goblin,
     ItemFactory::Wolf,
     ItemFactory::Rat,
@@ -30,7 +31,7 @@ Map::Map() // ручное создание карты
     ItemFactory::Skeleton,
     ItemFactory::Ghost
     };
-    std::vector<std::function<Item*()>> itemFactories = {
+    std::vector<std::function<std::unique_ptr<Item>()>> itemFactories = {
     ItemFactory::Dagger,
     ItemFactory::Axe,
     ItemFactory::Rapier,
@@ -51,12 +52,11 @@ Map::Map() // ручное создание карты
     ItemFactory::Potion_Power,
     ItemFactory::Potion_Reability,
     ItemFactory::Potion_Stamina,
-    ItemFactory::PlasmaSword,
     ItemFactory::Potion_Heal,
     ItemFactory::Bread,
     ItemFactory::IronSword
 };
-    grid[x][y] = new Location("Старт");
+    grid[x][y] = std::make_unique<Location>("Старт");
     for(int i = 0;i<width;i++){
         for(int j = 0;j<height;j++){
             grid[i][j] = nullptr; // для заполнения всех полей пустыми значениями
@@ -67,35 +67,30 @@ Map::Map() // ручное создание карты
     for (int i = 0; i < enemyCount; i++) {
         auto cell = getRandomFreeCell();
         int idx = rand() % enemyFactories.size();
-        grid[cell.first][cell.second] = new Location("Опасная зона", enemyFactories[idx]());
+        grid[cell.first][cell.second] = std::make_unique<Location>("Опасная зона", enemyFactories[idx]());
     }
     int itemCount = 4 + rand() % 8; // от 4 до 11
     for (int i = 0; i < itemCount; i++) {
         auto cell = getRandomFreeCell();
         int idx = rand() % itemFactories.size();
-        grid[cell.first][cell.second] = new Location("Сундук", nullptr, itemFactories[idx]());
+        grid[cell.first][cell.second] = std::make_unique<Location>("Сундук", nullptr, itemFactories[idx]());
     } 
     auto cell = getRandomFreeCell();
-    grid[cell.first][cell.second] = new Location("Выход", ItemFactory::Dragon(), nullptr, true);
+    grid[cell.first][cell.second] = std::make_unique<Location>("Выход", ItemFactory::Dragon(), nullptr, true);
     auto c = getRandomFreeCell();
     x = c.first;
     y = c.second;
     
 }
 
-Map::~Map()
-{
-    for(int i = 0;i<width;i++)
-        for(int j = 0;j<height;j++)
-            delete grid[i][j]; // освобождение памяти
-}
+
 
 bool Map::win() const
 {
     return grid[x][y] != nullptr && grid[x][y]->isExit(); // условие для победы
 }
 
-void Map::print()
+void Map::print() const
 {
     std::cout << "===== Map =====" << std::endl;
     for(int i = 0;i<width;i++){
@@ -150,7 +145,7 @@ void Map::setPlayerPosition(int x, int y){
     this->x = x;
     this->y = y;
 }
-Location* Map::get_current_locale() const
+    Location* Map::get_current_locale() const
 {
-    return grid[x][y];
+    return grid[x][y].get();
 }

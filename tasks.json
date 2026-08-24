@@ -5,16 +5,16 @@
             "label": "C/C++: g++.exe сборка активного файла",
             "command": "E:\\w64devkit\\bin\\g++.exe",
             "args": [
-                
-                    "-g",
-                    "Game.cpp",
-                    "Player.cpp",
-                    "Enemy.cpp",
-                    "Character.cpp",
-                    "Weapon.cpp",
-                    "-o",
-                    "Game.exe"
-                            ],
+                "-std=c++17",
+                "-g",
+                "Game.cpp",
+                "Player.cpp",
+                "Enemy.cpp",
+                "Character.cpp",
+                "Weapon.cpp",
+                "-o",
+                "Game.exe"
+            ],
             "options": {
                 "cwd": "${fileDirname}"
             },
